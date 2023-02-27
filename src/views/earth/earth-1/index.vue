@@ -74,7 +74,7 @@ starsGeometry.setAttribute(
 );
 
 // 加载点材质纹理
-const starImg = new URL(`../../assets/earth/stars.png`, import.meta.url).href
+const starImg = new URL(`../../../assets/earth/stars.png`, import.meta.url).href
 const starsTexture = new THREE.TextureLoader().load(starImg);
 const starsMaterial = new THREE.PointsMaterial({
   size: 2,
@@ -91,7 +91,7 @@ scene.add(stars);
 // 创建地球
 let earthGeometry = new THREE.SphereGeometry(50, 32, 32);
 
-const earthImg = new URL(`../../assets/earth/map.jpg`, import.meta.url).href
+const earthImg = new URL(`../../../assets/earth/map.jpg`, import.meta.url).href
 let earthTexture = new THREE.TextureLoader().load(earthImg);
 let earthMaterial = new THREE.MeshBasicMaterial({
   map: earthTexture,
@@ -100,7 +100,7 @@ let earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
 // 发光地球
 let lightEarthGeometry = new THREE.SphereGeometry(53, 32, 32);
-const lightImg = new URL(`../../assets/earth/earth.jpg`, import.meta.url).href
+const lightImg = new URL(`../../../assets/earth/earth.jpg`, import.meta.url).href
 let lightTexture = new THREE.TextureLoader().load(lightImg);
 let lightEarthMaterial = new THREE.MeshBasicMaterial({
   map: lightTexture,
@@ -112,7 +112,7 @@ let lightEarth = new THREE.Mesh(lightEarthGeometry, lightEarthMaterial);
 scene.add(lightEarth);
 
 // 添加地球内外发光精灵
-const spriteImg = new URL(`../../assets/earth/glow.png`, import.meta.url).href
+const spriteImg = new URL(`../../../assets/earth/glow.png`, import.meta.url).href
 let spriteTexture = new THREE.TextureLoader().load(spriteImg);
 let spriteMaterial = new THREE.SpriteMaterial({
   map: spriteTexture,
@@ -127,7 +127,7 @@ sprite.scale.set(155, 155, 0);
 scene.add(sprite);
 
 // 内发光
-const innerGlowImg = new URL(`../../assets/earth/innerGlow.png`, import.meta.url).href
+const innerGlowImg = new URL(`../../../assets/earth/innerGlow.png`, import.meta.url).href
 let spriteTexture1 = new THREE.TextureLoader().load(innerGlowImg);
 let spriteMaterial1 = new THREE.SpriteMaterial({
   map: spriteTexture1,
@@ -144,7 +144,7 @@ scene.add(sprite1);
 for (let i = 0; i < 30; i++) {
   // 实现光柱
   let lightPillarTexture = new THREE.TextureLoader().load(
-    new URL(`../../assets/earth/light_column.png`, import.meta.url).href
+    new URL(`../../../assets/earth/light_column.png`, import.meta.url).href
   );
   let lightPillarGeometry = new THREE.PlaneGeometry(3, 20);
   let lightPillarMaterial = new THREE.MeshBasicMaterial({
@@ -161,7 +161,7 @@ for (let i = 0; i < 30; i++) {
 
   // 创建波纹
   let circlePlane = new THREE.PlaneGeometry(6, 6);
-  let circleTexture = new THREE.TextureLoader().load(new URL(`../../assets/earth/label.png`, import.meta.url).href);
+  let circleTexture = new THREE.TextureLoader().load(new URL(`../../../assets/earth/label.png`, import.meta.url).href);
   let circleMaterial = new THREE.MeshBasicMaterial({
     color: 0xffffff,
     map: circleTexture,
@@ -202,7 +202,7 @@ for (let i = 0; i < 30; i++) {
 }
 
 // 绕地球运行的月球
-let moonTexture = new THREE.TextureLoader().load(new URL(`../../assets/earth/moon.jpg`, import.meta.url).href);
+let moonTexture = new THREE.TextureLoader().load(new URL(`../../../assets/earth/moon.jpg`, import.meta.url).href);
 let moonMaterial = new THREE.MeshStandardMaterial({
   map: moonTexture,
   emissive: 0xffffff,
@@ -215,7 +215,7 @@ scene.add(moon);
 
 // 创建月球环
 let moonRingTexture = new THREE.TextureLoader().load(
-  new URL(`../../assets/earth/moon_ring.png`, import.meta.url).href
+  new URL(`../../../assets/earth/moon_ring.png`, import.meta.url).href
 );
 let moonRingMaterial = new THREE.MeshBasicMaterial({
   map: moonRingTexture,

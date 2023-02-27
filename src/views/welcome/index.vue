@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="welcome__main" v-else>
-          <div class="welcome__main__modules" v-for="item in nextMenu" :key="item.name" @click="toPage(item.path)">
+          <div class="welcome__main__modules" v-for="item in nextMenu" :key="item.name" @click="toPage(item)">
             {{item.name}}
           </div>
         </div>
@@ -20,8 +20,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
+const allRoutes = router.getRoutes()
 const modules = router.options.routes.slice(1)
 
 const nextMenu = ref([])
@@ -29,13 +31,18 @@ function clickModule(module) {
   if (module.children) {
     nextMenu.value = module.children
   } else {
-    toPage(module.path)
+    toPage(module)
   }
 }
 
-function toPage(path) {
-  const routeData = router.resolve({ path })
-  window.open(routeData.href, '_blank')
+function toPage({ name }) {
+  const path = allRoutes.find(route => route.name === name)?.path
+  if (path) {
+    const routeData = router.resolve({ path })
+    window.open(routeData.href, '_blank')
+  } else {
+    ElMessage.warning('无此路由，请检查路由配置')
+  }
 }
 
 function goBack() {
