@@ -9,3 +9,8 @@
 3. 设置光照投影阴影  directionalLight.castShadow = true
 4. 设置物体投射阴影  sphere.castShadow = true
 5. 设置物体接收阴影  plane.receiveShadow = true
+
+## 物理引擎的使用
+1. 实际上是创造一个物理世界
+2. 把渲染物体（初始状态）复制到物理世界得到虚拟物体，进行物理交互
+3. 把物理交互后的虚拟物体复制回Scene，得到渲染物体（结束状态）

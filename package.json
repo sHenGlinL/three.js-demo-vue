@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cannon-es": "^0.20.0",
     "element-plus": "^2.2.32",
     "gsap": "^3.11.4",
     "three": "^0.149.0",
