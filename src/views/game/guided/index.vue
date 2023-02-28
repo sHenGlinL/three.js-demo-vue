@@ -7,8 +7,10 @@ import { ref, onMounted } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader' // 模型解压库
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+import { gsap } from 'gsap'
 // 导入着色器代码
-// import vertexShader from "./shader/vertexShader.glsl";
 import fragmentShader from "./shader/fragmentShader.glsl?raw";
 
 const { innerWidth, innerHeight } = window
@@ -28,6 +30,14 @@ renderer.setSize(innerWidth, innerHeight)
 // 添加轨道控制器
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
+// 设置hdr背景
+const rgbeLoader = new RGBELoader()
+rgbeLoader.loadAsync("./hdr/guided/kloppenheim_02_2k.hdr").then((texture) => {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = texture;
+  scene.environment = texture;
+});
+
 
 // 添加平行光源
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
@@ -41,7 +51,13 @@ scene.add(directionalLight, directionalLight2);
 // 声明导弹、乌克兰地图、俄罗斯地图、导弹曲线
 let missile, mapwkl, mapels, curvePath;
 // 载入模型
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('./draco/') // 设置解压库路径
 const gltfLoader = new GLTFLoader();
+gltfLoader.setDRACOLoader(dracoLoader)
+gltfLoader.load('./model/guided/ew.glb', (gltf) => {
+  scene.add(gltf.scene);
+});
 gltfLoader.load("./model/guided/ew8.glb", (gltf) => {
   const model = gltf.scene
   mapels = model.children[0]; // 俄罗斯地图
@@ -127,32 +143,65 @@ audioLoader.load(new URL('../../../assets/game/guided/bomb.mp3', import.meta.url
   sound.setVolume(0.5);
 });
 
+// 导弹+爆炸动画
+const params = {
+  time: 0
+}
+gsap.to(params, {
+  time: 1,
+  duration: 5,
+  repeat: -1,
+  ease: "linear",
+  onUpdate: () => {
+    const t = params.time
+    if (curvePath) {
+      // const point = curvePath.getPointAt(t); // 根据弧长返回曲线上给定位置的点。必须在范围[0，1]内。
+      missile.position.copy(curvePath.getPointAt(t)) // 设置导弹飞行坐标
+      
+      // 判断t+0.1是否小于1，如果小于1就设置导弹飞行方向
+      if (t + 0.1 < 1) {
+        missile.lookAt(curvePath.getPointAt(t + 0.01)) // 设置导弹飞行方向
+      }
+      // 设置爆炸效果和音效
+      if (t > 0.95) {
+        scene.add(sprite);
+        // 判断声音是否播放，如果没有播放则播放
+        if (!sound.isPlaying) {
+          sound.play();
+        }
+      }
+    }
+    // 爆炸动画
+    iTime.value = t * 10;
+  }
+})
+
 // 创建clock
-const clock = new THREE.Clock();
+// const clock = new THREE.Clock();
 // 渲染函数
 const render = () => {
   // 导弹动画
-  let t = clock.getElapsedTime() % 5;  // 设置5秒循环1次
-  t = t / 5
-  if (curvePath) {
-    // const point = curvePath.getPointAt(t); // 根据弧长在曲线上的位置。必须在范围[0，1]内。
-    missile.position.copy(curvePath.getPointAt(t)) // 设置导弹飞行坐标
+  // let t = clock.getElapsedTime() % 5;  // 设置5秒循环1次
+  // t = t / 5
+  // if (curvePath) {
+  //   // const point = curvePath.getPointAt(t); // 根据弧长返回曲线上给定位置的点。必须在范围[0，1]内。
+  //   missile.position.copy(curvePath.getPointAt(t)) // 设置导弹飞行坐标
     
-    // 判断t+0.1是否小于1，如果小于1就设置导弹飞行方向
-    if (t + 0.1 < 1) {
-      missile.lookAt(curvePath.getPointAt(t + 0.01)) // 设置导弹飞行方向
-    }
-    // 设置爆炸效果和音效
-    if (t > 0.95) {
-      scene.add(sprite);
-      // 判断声音是否播放，如果没有播放则播放
-      if (!sound.isPlaying) {
-        sound.play();
-      }
-    }
-  }
-  // 爆炸动画
-  iTime.value = t * 10;
+  //   // 判断t+0.1是否小于1，如果小于1就设置导弹飞行方向
+  //   if (t + 0.1 < 1) {
+  //     missile.lookAt(curvePath.getPointAt(t + 0.01)) // 设置导弹飞行方向
+  //   }
+  //   // 设置爆炸效果和音效
+  //   if (t > 0.95) {
+  //     scene.add(sprite);
+  //     // 判断声音是否播放，如果没有播放则播放
+  //     if (!sound.isPlaying) {
+  //       sound.play();
+  //     }
+  //   }
+  // }
+  // // 爆炸动画
+  // iTime.value = t * 10;
 
   controls.update()
   renderer.render(scene, camera)
