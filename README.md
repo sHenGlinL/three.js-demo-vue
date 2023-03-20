@@ -1,4 +1,19 @@
 # 笔记
+
+## 创建大量几何体
+### BufferGeometry
+1. 创建大量的几何体，可用BufferGeometry
+2. 需要创建Float32Array + BufferAttribute设置所有几何体的属性（如position）
+3. 最后使用Points创建
+### InstancedMesh
+1. 创建大量的几何体，也可以使用实例化创建
+2. 使用矩阵Matrix4设置position等属性，方便操作（位移、旋转、缩放）
+
+## 几何体叠加的时候可能用到的属性
+1. depthWrite 渲染此材质是否对深度缓冲区有任何影响
+2. blending 设置叠加算法
+## 物体交互
+1. 使用投射光线 Raycaster
 ## 常量 EquirectangularReflectionMapping 和 EquirectangularRefractionMapping 的区别
 1. 都是球形全景纹理映射，用于等距圆柱投影的环境贴图，也被叫做经纬线映射贴图
 2. 折射：EquirectangularRefractionMapping 反射：EquirectangularReflectionMapping
