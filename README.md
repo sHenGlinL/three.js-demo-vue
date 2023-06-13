@@ -14,7 +14,21 @@
 2. blending 设置叠加算法
 ## 物体交互
 1. 使用投射光线 Raycaster
-## 常量 EquirectangularReflectionMapping 和 EquirectangularRefractionMapping 的区别
+## 着色器 
+- precision lowp float 设置浮点数精度 highp mediump lowp
+- Attributes 与每个顶点关联的变量
+- Uniforms是所有顶点都具有相同的值的变量
+- Varyings 是从顶点着色器传递到片元着色器的变量
+### ShaderMaterial 着色器材质
+1. 至少设置 顶点着色器vertesShader 和片元着色器fragmentShader（分别编写两个.glsl文件）
+- vertesShader 设置gl_position
+```
+# 投影矩阵 * 视图矩阵 * 模型矩阵 * 顶点坐标
+gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 )
+```
+### rawShaderMaterial 原始着色器材质
+## 材质的mapping属性
+- 常量 EquirectangularReflectionMapping 和 EquirectangularRefractionMapping 的区别
 1. 都是球形全景纹理映射，用于等距圆柱投影的环境贴图，也被叫做经纬线映射贴图
 2. 折射：EquirectangularRefractionMapping 反射：EquirectangularReflectionMapping
 
@@ -26,6 +40,7 @@
 5. 设置物体接收阴影  plane.receiveShadow = true
 
 ## 物理引擎的使用
+- 使用 cannon 物理引擎库
 1. 实际上是创造一个物理世界
 2. 把渲染物体（初始状态）复制到物理世界得到虚拟物体，进行物理交互
 3. 把物理交互后的虚拟物体复制回Scene，得到渲染物体（结束状态）
